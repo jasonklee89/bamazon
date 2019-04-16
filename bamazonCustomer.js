@@ -9,19 +9,24 @@ var connection = mysql.createConnection({
     database: "bamazon_DB"
 });
 
+var quantityDesired;
+var quantityStock;
+var itemPrice;
+
 connection.connect(function (err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId + "\n");
-    readProducts();
+    productTable();
 });
 
-setTimeout(start, 3000);
-
-function readProducts() {
+function productTable() {
     console.log("Selecting all products...\n");
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
-        console.log(JSON.stringify(res, null, 2));
+        for (var i = 0; i < res.length; i++) {
+            console.log(res[i].id + " || " + res[i].product_name + " || " + res[i].department_name + " || " + "Price: " + res[i].price + " || " + "Quantity: " + res[i].stock_quantity + " || " + "\n")
+        }
+        start();
     });
 }
 
@@ -48,26 +53,43 @@ function start() {
         ])
         .then(function (answer) {
             console.log("Checking products...\n");
-            var quantityDesired = answer.quantity
-            var quantityStock;
-            connection.query("SELECT stock_quantity FROM products WHERE ?",
-                [
-                    {
-                        id: answer.item
-                    }
-                ],
+            quantityDesired = answer.quantity
+            connection.query("SELECT price FROM products WHERE id='"+answer.item+"'",
                 function (err, res) {
                     if (err) throw err;
-                    quantityStock = res[0].stock_quantity;
-                    if (quantityStock < quantityDesired) {
-                        console.log("Insufficient stock!  Would you like something else?")
-                        setTimeout(readProducts, 2000);
-                        setTimeout(start, 5000);
-                    } else {
-                        console.log("You got it!")
-                        console.log(quantityDesired + "||" + quantityStock);
-                    }
+                    itemPrice = res[0].price
+                    connection.query("SELECT stock_quantity FROM products WHERE id='"+answer.item+"'",
+                        function (err, res2) {
+                            if (err) throw err;
+                            quantityStock = res2[0].stock_quantity;
+                            if (quantityStock < quantityDesired) {
+                                console.log("Insufficient stock!  Would you like something else?")
+                                setTimeout(productTable, 2000);
+                                setTimeout(start, 5000);
+                            } else {
+                                console.log("You got it!")
+                                connection.query(
+                                    "UPDATE products SET stock_quantity=stock_quantity-'"+(quantityDesired)+"' WHERE id='"+answer.item+"'",
+                                    function (err, res3) {
+                                        updatedTable();
+                                    }
+                                )
+                            }
+                        
+                        }
+                    );
                 }
-            );
+            )
         });
 };
+
+function updatedTable() {
+    console.log("Updating inventory...\n");
+    connection.query("SELECT * FROM products", function (err, res) {
+        if (err) throw err;
+        for (var i = 0; i < res.length; i++) {
+            console.log(res[i].id + " || " + res[i].product_name + " || " + res[i].department_name + " || " + "Price: " + res[i].price + " || " + "Quantity: " + res[i].stock_quantity + " || " + "\n")
+        }
+        console.log("Your total today is: $" + quantityDesired * itemPrice);
+    });
+}
