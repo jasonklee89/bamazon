@@ -13,12 +13,13 @@ connection.connect(function (err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId + "\n");
     readProducts();
-    start();
 });
+
+setTimeout(start, 3000);
 
 function readProducts() {
     console.log("Selecting all products...\n");
-    connection.query("SELECT * FROM products", function (err, res) {
+    connection.query("SELECT id FROM products", function (err, res) {
         if (err) throw err;
         console.log(JSON.stringify(res, null, 2));
         connection.end();
@@ -31,13 +32,13 @@ function start() {
             {
                 name: "item",
                 type: "list",
-                message: "What is id of item(s) you would like to purchase?",
+                message: "What is the id of the item(s) you would like to purchase?",
                 choices: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
             },
             {
                 name: "quantity",
                 type: "input",
-                message: "How many would you like to purchase?"
+                message: "How many would you like to purchase?",
                 validate: function(value) {
                     if (isNaN(value) === false) {
                       return true;
@@ -47,7 +48,26 @@ function start() {
             }
         ])
         .then(function (answer) {
-            // based on their answer, either call the bid or the post functions
-            connection.end()
+            checkProducts();
+            // if () {
+
+            // }
         });
+}
+
+
+function checkProducts() {
+    console.log("Checking products...\n");
+    var quantityDesired;
+    var quantityStock;
+    connection.query("SELECT id FROM products", function (err, res) {
+        if (err) throw err;
+        for (var i = 0; i < res.length; i++) {
+            var id = res[i].id
+            if (answer.id = id) {
+                
+            }
+        // console.log(JSON.stringify(res, null, 2));
+        connection.end();
+    });
 }
