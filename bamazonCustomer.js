@@ -19,10 +19,9 @@ setTimeout(start, 3000);
 
 function readProducts() {
     console.log("Selecting all products...\n");
-    connection.query("SELECT id FROM products", function (err, res) {
+    connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
         console.log(JSON.stringify(res, null, 2));
-        connection.end();
     });
 }
 
@@ -39,35 +38,36 @@ function start() {
                 name: "quantity",
                 type: "input",
                 message: "How many would you like to purchase?",
-                validate: function(value) {
+                validate: function (value) {
                     if (isNaN(value) === false) {
-                      return true;
+                        return true;
                     }
                     return false;
-                  }
+                }
             }
         ])
         .then(function (answer) {
-            checkProducts();
-            // if () {
-
-            // }
+            console.log("Checking products...\n");
+            var quantityDesired = answer.quantity
+            var quantityStock;
+            connection.query("SELECT stock_quantity FROM products WHERE ?",
+                [
+                    {
+                        id: answer.item
+                    }
+                ],
+                function (err, res) {
+                    if (err) throw err;
+                    quantityStock = res[0].stock_quantity;
+                    if (quantityStock < quantityDesired) {
+                        console.log("Insufficient stock!  Would you like something else?")
+                        setTimeout(readProducts, 2000);
+                        setTimeout(start, 5000);
+                    } else {
+                        console.log("You got it!")
+                        console.log(quantityDesired + "||" + quantityStock);
+                    }
+                }
+            );
         });
-}
-
-
-function checkProducts() {
-    console.log("Checking products...\n");
-    var quantityDesired;
-    var quantityStock;
-    connection.query("SELECT id FROM products", function (err, res) {
-        if (err) throw err;
-        for (var i = 0; i < res.length; i++) {
-            var id = res[i].id
-            if (answer.id = id) {
-                
-            }
-        // console.log(JSON.stringify(res, null, 2));
-        connection.end();
-    });
-}
+};
