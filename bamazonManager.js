@@ -15,6 +15,9 @@ connection.connect(function (err) {
     start();
 });
 
+
+
+
 function start() {
     inquirer
         .prompt([
@@ -50,8 +53,8 @@ var viewProducts = function () {
         for (var i = 0; i < res.length; i++) {
             console.log(res[i].id + " || " + res[i].product_name + " || " + "Price: " + res[i].price + " || " + "Quantity: " + res[i].stock_quantity + " || " + "\n");
         }
+        setTimeout(start, 1000);
     })
-    start();
 };
 
 var viewLowInventory = function () {
@@ -59,16 +62,15 @@ var viewLowInventory = function () {
         connection.query("SELECT id, product_name, price, stock_quantity FROM products WHERE stock_quantity='" + [i] + "'",
             function (err, res) {
                 if (err) throw err;
-                if (res[0] === undefined){
-                    return;
-                }
+                // if (res[0] === undefined){
+                //     return;
+                // }
                 for (var j = 0; j < res.length; j++) {
                     console.log(res[j].id + " || " + res[j].product_name + " || " + "Price: " + res[j].price + " || " + "Quantity: " + res[j].stock_quantity + " || " + "\n");
-                }
-                
-            }
-        )
+                } 
+        })
     }
+    setTimeout(start, 1000);
 }
 
 var addToInventory = function () {
@@ -113,6 +115,7 @@ var addToInventory = function () {
                 })
             }
         )
+        setTimeout(start, 1000);
     })
 }
 
@@ -159,3 +162,4 @@ var addNewProduct = function () {
         viewProducts();
     })
 }
+
