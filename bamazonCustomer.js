@@ -35,9 +35,15 @@ function start() {
         .prompt([
             {
                 name: "item",
-                type: "list",
-                message: "What is the id of the item(s) you would like to purchase?",
-                choices: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                type: "input",
+                message: "What is the id of the item you would like to purchase?",
+                validate: function (value) {
+                    if (isNaN(value) === false) {
+                        return true;
+                    }
+                    console.log("Please enter a number")
+                    return false;
+                }
             },
             {
                 name: "quantity",
@@ -47,6 +53,7 @@ function start() {
                     if (isNaN(value) === false) {
                         return true;
                     }
+                    console.log("Please enter a number")
                     return false;
                 }
             }
