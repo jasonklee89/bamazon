@@ -28,7 +28,7 @@ function productTable() {
         }
         start();
     });
-}
+};
 
 function start() {
     inquirer
@@ -99,4 +99,4 @@ function updatedTable() {
         }
         console.log("Your total today is: $" + quantityDesired * itemPrice);
     });
-}
+};

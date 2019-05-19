@@ -71,7 +71,7 @@ var viewLowInventory = function () {
         })
     }
     setTimeout(start, 1000);
-}
+};
 
 var addToInventory = function () {
     inquirer
@@ -117,7 +117,7 @@ var addToInventory = function () {
         )
         setTimeout(start, 1000);
     })
-}
+};
 
 var addNewProduct = function () {
     inquirer
@@ -161,5 +161,5 @@ var addNewProduct = function () {
             })
         viewProducts();
     })
-}
+};
 
