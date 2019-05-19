@@ -18,9 +18,9 @@
     * i.e. type `node bamazonCustomer.js` into the root file's command line
 
 ## Screenshots
-# Bamazon Customer
+### Bamazon Customer
 ![Bamazon Customer](/screenshots/bamazonCustomer.png?raw=true "Bamazon Customer")
-# Bamazon Manager
+### Bamazon Manager
 ![Bamazon Manager](/screenshots/bamazonManager.png?raw=true "Bamazon Manager")
 
 ## Video Walkthrough
