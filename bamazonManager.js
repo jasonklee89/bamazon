@@ -16,8 +16,6 @@ connection.connect(function (err) {
 });
 
 
-
-
 function start() {
     inquirer
         .prompt([
@@ -58,13 +56,11 @@ var viewProducts = function () {
 };
 
 var viewLowInventory = function () {
+    // Checks for items where quantity is less than 5s
     for (var i = 0; i < 5; i++) {
         connection.query("SELECT id, product_name, price, stock_quantity FROM products WHERE stock_quantity='" + [i] + "'",
             function (err, res) {
                 if (err) throw err;
-                // if (res[0] === undefined){
-                //     return;
-                // }
                 for (var j = 0; j < res.length; j++) {
                     console.log(res[j].id + " || " + res[j].product_name + " || " + "Price: " + res[j].price + " || " + "Quantity: " + res[j].stock_quantity + " || " + "\n");
                 } 
